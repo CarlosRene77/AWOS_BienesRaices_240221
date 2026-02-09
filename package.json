@@ -1,0 +1,34 @@
+{
+  "name": "awos_bienesraices_240221",
+  "version": "1.0.0",
+  "description": "Sistema de Bienes Raíces - Proyecto de Clase",
+  "keywords": [
+    "SOA",
+    "MVC",
+    "REST",
+    "Tailwild",
+    "Sequelize",
+    "NodeJS"
+  ],
+  "homepage": "https://github.com/CarlosRene77/AWOS_BienesRaices_240221#readme",
+  "bugs": {
+    "url": "https://github.com/CarlosRene77/AWOS_BienesRaices_240221/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlosRene77/AWOS_BienesRaices_240221.git"
+  },
+  "license": "ISC",
+  "author": "Carlos Rene Morales Santos",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
