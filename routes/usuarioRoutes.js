@@ -1,8 +1,13 @@
 import express from "express";
+import { formularioLogin, formularioRegistro} from '../controllers/usuarioController.js';
 
 //creamos el ruteador
-
 const router = express.Router();
+
+
+router.get("/login", formularioLogin);
+router.get("/registro", formularioRegistro);
+
 
 //Definimos las rutas 
         
@@ -92,13 +97,8 @@ router.delete("/deleteProperty/:id", (req,res)=>{
 
 
 router.get("/login", (req, res) => {
-    console.log("El usuario desea acceder al sistema")
-    res.status(200).send(`<h1>Por favor introduce tus credenciales de acceso </h1>
-        <form>
-            <input type="text"></input><br>
-            <input type="password"></input><br>
-            <button>Enviar</button>
-        </form>`);
+    res.render("auth/login")
+    autenticado:true
 })
 
 router.get("/saludo/:nombre", (req, res)=>
