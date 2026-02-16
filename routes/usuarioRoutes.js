@@ -1,8 +1,13 @@
 import express from "express";
+import { formularioLogin, formularioRegistro} from '../controllers/usuarioController.js';
 
 //creamos el ruteador
-
 const router = express.Router();
+
+
+router.get("/login", formularioLogin);
+router.get("/registro", formularioRegistro);
+
 
 //Definimos las rutas 
         
