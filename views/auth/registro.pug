@@ -1,6 +1,47 @@
 extends ../layout/index
     
 block contenido
-    div 
-        h2.text-center.text-2xl.font-extrabold.text-indigo-600 Crea tu Cuenta
-    p.text-center.text-gray-600.mt-2 Por favor ingresa cuidadosamente tus datos:
+    div.min-h-screen.bg-gray-50.flex.items-center.justify-center.p-4
+        div.max-w-2xl.w-full
+            div.text-center.mb-8
+                div.inline-block.p-3.bg-indigo-100.rounded-full.mb-4
+                    svg.h-8.w-8.text-indigo-600.mx-auto(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                        path(stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z")
+                h1.text-3xl.font-bold.text-gray-900 Bienes
+                    span.font-light.text-indigo-600  Raíces
+                p.text-gray-500.mt-2.text-base Completa tus datos para registrarte
+
+            div.bg-white.rounded-lg.shadow-lg.p-6.border.border-gray-100
+                form.space-y-5
+                    div.grid.grid-cols-1.gap-5(class="md:grid-cols-2")
+                        div
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="nombreUsuario") Nombre completo
+                            input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Carlos Rene Morales" name="nombreUsuario" type="text")
+                        
+                        div
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="correoUsuario") Correo electrónico
+                            input#correoUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="usuario@gmail.com" name="correoUsuario" type="email")
+                        
+                        div
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="passwordUsuario") Contraseña
+                            input#passwordUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Mínimo 8 caracteres" name="passwordUsuario" type="password")
+                        
+                        div
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="confirmarContraseña") Confirmar contraseña
+                            input#confirmacionPass.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Repite tu contraseña" name="confirmacionPass" type="password")
+
+                    div.flex.items-start.gap-2.mt-2
+                        input#terminos(type="checkbox" class="mt-1.w-4.h-4.text-indigo-600.border-gray-300.rounded")
+                        label.text-xs.text-gray-600(for="terminos")
+                            | Acepto los 
+                            a.text-indigo-600(class="hover:underline" href="/terminos") Términos y condiciones
+                            |  y la 
+                            a.text-indigo-600(class="hover:underline" href="/privacidad") Política de privacidad
+
+                    button.w-full.bg-indigo-600.text-white.py-2.px-4.rounded-lg.font-medium(class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit")
+                        | Registrar Usuario
+                    
+                    div.flex.items-center.justify-center.gap-4.pt-2.text-sm
+                        a.text-gray-500(class="hover:text-indigo-600" href="/auth/login") Iniciar Sesión
+                        span.text-gray-300 •
+                        a.text-gray-500(class="hover:text-indigo-600" href="/auth/recuperacionPassword") Recuperar Contraseña
