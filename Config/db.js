@@ -51,6 +51,7 @@ export const connectDB = async () => {
     try { //Intentamos establecer la conexión con la base de datos
         await sequelize.authenticate(); //Autentica la conexión con la base de datos, si las credenciales son correctas y la base de datos está disponible, se establece la conexión
         console.log("✅ Conexión a MySQL establecida correctamente."); //Si la conexión se establece correctamente, se muestra un mensaje en la consola
+        sequelize.sync();
     } catch (error) { //Si ocurre un error al intentar establecer la conexión, se captura el error y se muestra un mensaje en la consola
         console.error("❌ No se pudo conectar a MySQL:", error); //Si ocurre un error, se muestra un mensaje en la consola con el error específico
         process.exit(1); // Salir del proceso con un código de error

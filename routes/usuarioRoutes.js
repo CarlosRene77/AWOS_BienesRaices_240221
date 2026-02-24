@@ -1,5 +1,5 @@
 import express from "express";
-import { formularioLogin,formularioRegistro,formulariorecuperacion } from "../controllers/usuarioController.js";
+import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario } from "../controllers/usuarioController.js";
 
 //creamos el ruteador
 const router = express.Router();
@@ -7,6 +7,17 @@ const router = express.Router();
 router.get("/login",formularioLogin);
 router.get("/registro",formularioRegistro);
 router.get("/recuperacionPassword",formulariorecuperacion);
+
+
+//POST
+router.post("/registro", registrarUsuario)
+router.post("/createUser", (req, res) => {
+    console.log("Se ha solicitado crear un nuevo usuario.")
+    res.json({
+        status: 200,
+        message: "Se ha solicitado la creación de un nuevo usuario."
+    })
+})
 
 
 //Definimos las rutas 
