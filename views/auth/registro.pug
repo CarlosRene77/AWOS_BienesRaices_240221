@@ -3,7 +3,6 @@ extends ../layout/index
 block contenido
     div.min-h-screen.bg-gray-50.flex.items-center.justify-center.p-4
         div.max-w-2xl.w-full
-        form.space(method= "POST" action="/auth/registro") 
             div.text-center.mb-8
                 div.inline-block.p-3.bg-indigo-100.rounded-full.mb-4
                     svg.h-8.w-8.text-indigo-600.mx-auto(fill="none" stroke="currentColor" viewBox="0 0 24 24")
@@ -12,16 +11,21 @@ block contenido
                     span.font-light.text-indigo-600  Raíces
                 p.text-gray-500.mt-2.text-base Completa tus datos para registrarte
 
+                if errores
+                    .max-w-md.mx-auto.my-10
+                        each error in errores
+                            p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+
             div.bg-white.rounded-lg.shadow-lg.p-6.border.border-gray-100
-                form.space-y-5
+                form.space-y-5(method= "POST" action="/auth/registro" noValidate) 
                     div.grid.grid-cols-1.gap-5(class="md:grid-cols-2")
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="nombreUsuario") Nombre completo
-                            input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Carlos Rene Morales" name="nombreUsuario" type="text")
+                            input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Carlos Rene Morales" name="nombreUsuario" value = usuario ? usuario.nombreUsuario: '' type="text")
                         
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="correoUsuario") Correo electrónico
-                            input#emailUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="usuario@gmail.com" name="emailUsuario" type="email")
+                            input#emailUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="usuario@gmail.com" name="emailUsuario" value = usuario ? usuario.emailUsuario: '' type="email")
                         
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="passwordUsuario") Contraseña
@@ -32,7 +36,7 @@ block contenido
                             input#confirmacionPass.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Repite tu contraseña" name="confirmacionPass" type="password")
 
                     div.flex.items-start.gap-2.mt-2
-                        input#terminos(type="checkbox" class="mt-1.w-4.h-4.text-indigo-600.border-gray-300.rounded")
+                        input#terminos(type="checkbox" class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500")
                         label.text-xs.text-gray-600(for="terminos")
                             | Acepto los 
                             a.text-indigo-600(class="hover:underline" href="/terminos") Términos y condiciones
