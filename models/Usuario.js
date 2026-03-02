@@ -56,10 +56,10 @@ const Usuario = db.define('Usuario', {
         field: 'confirmed'
     }, 
 
-    tokenRecovery: {
+    token: {
         type: DataTypes.STRING(255),
         allowNull: true,
-        field: 'token_recovery'
+        field: 'token'
     },
 
     tokenExpiration: {

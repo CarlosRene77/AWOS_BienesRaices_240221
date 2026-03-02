@@ -1,5 +1,6 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
+import { generarToken} from "../lib/tokens.js";
 
 const formularioLogin = (req, res) => {
     res.render('auth/login', {pagina: "Inicia Sesión"});
@@ -16,7 +17,8 @@ const formulariorecuperacion = (req, res) =>{
 const registrarUsuario = async(req,res) =>
 {
     console.log("Intentando registrar a un usuario nuevo con los datos del formulario:");
-    console.log(req.body);
+    
+    const {nombreUsuario: name,emailUsuario:email,passwordUsuario:password} = req.body
     
     //Validacion de los datos del formulario previo a registro en la BD
     // Definir reglas de validacion
@@ -25,10 +27,22 @@ const registrarUsuario = async(req,res) =>
     ("el correo electrónico no tiene un formato adecuado").run(req)
     await check('passwordUsuario').notEmpty().withMessage("La contraseña parece estar vacia").isLength({min:8, max:30}).withMessage
     ("La longitud de la contraseña debe ser entre 8 y 30 caracteres").run(req);
-    await check('confirmacionUsuario').equals(req.body.passwordUsuario).withMessage("Ambas contraseñas deben ser iguales").run(req);
+    await check('confirmacionUsuario').equals(password).withMessage("Ambas contraseñas deben ser iguales").run(req);
 
     // Aplicamos las reglas definidas
     let resultadoValidacion = validationResult(req);
+
+    // Verificar si el usuario no esta previamente registrado en la bd
+    const existeUsuario = await Usuario.findOne({where: {email}})
+
+    if(existeUsuario)
+    {
+        res.render("auth/registro", {
+            pagina: "Registrate con nosotros :)",
+            errores: [{msg: `Ya existe un usuario asociado al correo: ${email}`}],
+            usuario: {nombreUsuario: name,
+            }});
+    }
 
     // Validar si hay errores en la recepción de datos, si mandar a BD
 
@@ -36,21 +50,24 @@ const registrarUsuario = async(req,res) =>
     {
             const data =
     {
-        name: req.body.nombreUsuario,
-        email: req.body.emailUsuario,
-        password: req.body.passwordUsuario
+        name,
+        email,
+        password,
+        token: generarToken()
     }
     const usuario = await Usuario.create(data);
-    res.json(usuario)
+    res.render("templates/mensaje", {
+        title: "Bienvenid@  a Bienes Raices!",
+        msg: `La cuenta asociada al correo: ${email}, se ha creado exitosamente, te
+        pedimos confirmar tu a través del correo  electronico que te hemos envíado`
+    })
     }
     else
     res.render("auth/registro", {
         pagina: "Error al intentar crear una cuenta",
         errores: resultadoValidacion.array(),
-        usuario: {nombreUsuario: req.body.nombreUsuario,
-            emailUsuario: req.emailUsuario
-        
-        }});
+        usuario:{nombreUsuario: req.body.nombreUsuario, emailUsuario:req.body.emailUsuario}
+    });
 }
 
 export {
