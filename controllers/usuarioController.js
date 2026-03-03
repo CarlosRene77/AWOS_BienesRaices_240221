@@ -1,6 +1,7 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
 import { generarToken} from "../lib/tokens.js";
+import { emailRegistro } from "../lib/emails.js";
 
 const formularioLogin = (req, res) => {
     res.render('auth/login', {pagina: "Inicia Sesión"});
@@ -56,6 +57,15 @@ const registrarUsuario = async(req,res) =>
         token: generarToken()
     }
     const usuario = await Usuario.create(data);
+
+    // Enviar el correo electrónico
+    emailRegistro({
+        nombre: usuario.name,
+        email: usuario.email,
+        token: usuario.token
+    })
+
+
     res.render("templates/mensaje", {
         title: "Bienvenid@  a Bienes Raices!",
         msg: `La cuenta asociada al correo: ${email}, se ha creado exitosamente, te
@@ -69,6 +79,35 @@ const registrarUsuario = async(req,res) =>
         usuario:{nombreUsuario: req.body.nombreUsuario, emailUsuario:req.body.emailUsuario}
     });
 }
+const paginaConfirmacion = async (req,res) =>
+{
+    const {token: tokenCuenta} = req.params
+    console.log("Confirmando la cuenta asociada al token: ", tokenCuenta)
+
+    //Confirmar soi el token existe
+    const usuarioToken = await(Usuario.findOne({where:{token:tokenCuenta}}))
+    console.log(usuarioToken);
+
+    if(!usuarioToken)
+    {
+        res.render("templates/mensaje",{
+            title: "Error al comfirmar la cuenta",
+            msg: `El codigo de verificacion (no es valido), por favor intentalo de nuevo.`
+        });
+    }
+
+    //Actualizar los datos del usuario.
+    usuarioToken.token=null;
+    usuarioToken.confirmed=true;
+    usuarioToken.save();
+
+    res.render("templates/mensaje",{
+            title: "Confirmacion exitosa",
+            msg: `La cuenta de: ${usuarioToken.name}, asociada al correo electronico: ${usuarioToken.email}
+                se ha confirmado, ahora ya puedes ingresar a la plataforma`
+        });
+
+}
 
 export {
-    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion}
+    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion, paginaConfirmacion}
