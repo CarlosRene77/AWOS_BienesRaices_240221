@@ -7,9 +7,13 @@ block contenido
                 div.inline-block.p-3.bg-indigo-100.rounded-full.mb-4
                     svg.h-8.w-8.text-indigo-600.mx-auto(fill="none" stroke="currentColor" viewBox="0 0 24 24")
                         path(stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z")
-                h1.text-3xl.font-bold.text-gray-900 Bienes
-                    span.font-light.text-indigo-600  Raíces
+                
+                //- CORREGIDO: El h1 ahora contiene todo el texto
+                h1.text-3xl.font-bold.text-gray-900
+                    | Bienes 
+                    span.font-light.text-indigo-600 Raíces
 
-                    .mt-8.mx-auto.max-w-xl
-                        .bg-white.py-8.px-4.shadow-2x1.rounded-2xl
-                             p.text-xl.font-bold.text-center.my-10= msg
+                div.mt-8.mx-auto.max-w-xl
+                    div.bg-white.py-8.px-4.shadow-2xl.rounded-2xl
+                        //- CORREGIDO: El !{} debe estar dentro de un elemento que lo contenga
+                        div !{msg}

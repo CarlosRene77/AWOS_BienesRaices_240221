@@ -17,9 +17,9 @@ block contenido
                             p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
 
             div.bg-white.rounded-lg.shadow-lg.p-6.border.border-gray-100
-                form.space-y-5(method="POST" action="/auth/registro" noValidate) 
+                form.space-y-5(method="POST" action="/auth/registro" noValidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div.grid.grid-cols-1.gap-5(class="md:grid-cols-2")
-
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="nombreUsuario") Nombre completo
                             input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(

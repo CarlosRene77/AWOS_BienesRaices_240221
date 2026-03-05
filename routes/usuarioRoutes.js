@@ -49,8 +49,8 @@ router.post("/createUser", (req, res) => {
     console.log("Procesando una peticion POST");
 
     const nuevoUsuario = {
-        nombre: "Adrian Rios Gomez",
-        correo: "240165@utxicotepec.edu.mx"
+        nombre: "Carlos Rene Morales",
+        correo: "240221@utxicotepec.edu.mx"
     };
 
     res.json({
@@ -65,8 +65,8 @@ router.put("/updateUser", (req, res) => {
     console.log("Procesando una peticion PUT");
 
     const usuario = {
-        nombre: "Adrian Rios Gomez",
-        correo: "240165@utxicotepec.edu.mx"
+        nombre: "Rene Morales",
+        correo: "240221@utxicotepec.edu.mx"
     };
 
     const usuarioActualizado = {

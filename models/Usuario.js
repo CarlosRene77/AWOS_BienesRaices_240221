@@ -1,9 +1,11 @@
+// models/Usuario.js
 import { DataTypes } from "sequelize";
 import db from "../Config/db.js"
 import bcrypt from 'bcrypt';
-import crypto from  'crypto';
+import crypto from 'crypto';
 
 const Usuario = db.define('Usuario', {
+    // TODOS LOS CAMPOS VAN AQUÍ DENTRO
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -13,9 +15,11 @@ const Usuario = db.define('Usuario', {
 
     name: {
         type: DataTypes.STRING(100),
-        allowNull:false,
-        notEmpty: {
-            msg: 'La contraseña no puede estar vacia'
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: 'El nombre no puede estar vacío'
+            }
         }
     },
     
@@ -23,15 +27,14 @@ const Usuario = db.define('Usuario', {
         type: DataTypes.STRING(100),
         allowNull: false,
         unique: {
-            msg: 'El email ya esta registrado'
+            msg: 'El email ya está registrado'
         },
-
         validate: {
             isEmail: {
-                msg: 'Debe proporcionar un email valido'
+                msg: 'Debe proporcionar un email válido'
             },
             notEmpty: {
-                msg: 'El email no puede estar vacio'
+                msg: 'El email no puede estar vacío'
             }
         }
     },
@@ -41,11 +44,11 @@ const Usuario = db.define('Usuario', {
         allowNull: false,
         validate: {
             notEmpty: {
-                msg: 'La contraseña no puede estar vacia'
+                msg: 'La contraseña no puede estar vacía'
             },
             len: {
-                args: [8,100],
-                msg: 'La contraseña debe tener al menos 6 caracteres'
+                args: [8, 100],
+                msg: 'La contraseña debe tener al menos 8 caracteres'
             }
         }
     },
@@ -54,7 +57,36 @@ const Usuario = db.define('Usuario', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         field: 'confirmed'
-    }, 
+    },
+
+    // ✅ NUEVOS CAMPOS PARA REDES SOCIALES (DENTRO DE LA CONSTANTE)
+    facebookId: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        unique: true,
+        field: 'facebook_id'
+    },
+
+    googleId: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        unique: true,
+        field: 'google_id'
+    },
+
+    provider: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+        defaultValue: 'local',
+        field: 'provider'
+    },
+
+    avatar: {
+        type: DataTypes.TEXT,  // Cambiado de VARCHAR(500) a TEXT
+        allowNull: true,
+        field: 'avatar'
+    },
+    // ✅ FIN DE NUEVOS CAMPOS
 
     token: {
         type: DataTypes.STRING(255),
@@ -74,12 +106,12 @@ const Usuario = db.define('Usuario', {
         field: 'reg_status'
     },
 
-    las_login: {
+    last_login: {
         type: DataTypes.DATE,
         allowNull: true,
         field: 'last_login'
     }
-  }, {
+}, {  // ← ESTO CIERRA EL PRIMER OBJETO (CAMPOS) Y EMPIEZA LA CONFIGURACIÓN
     tableName: 'tb_users',
     timestamps: true,
     underscored: true,
@@ -87,15 +119,12 @@ const Usuario = db.define('Usuario', {
     updatedAt: 'update_at',
 
     hooks: {
-        // Hash de contraseña antes de crear
         beforeCreate: async (usuario) => {
             if (usuario.password) {
                 const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_ROUNDS) || 10);
                 usuario.password = await bcrypt.hash(usuario.password, salt);
             }
         },
-
-        // Hash de contraseña antes de actualizar (si cambio)
         beforeUpdate: async (usuario) => {
             if (usuario.changed('password')) {
                 const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_ROUNDS) || 10);
@@ -103,9 +132,6 @@ const Usuario = db.define('Usuario', {
             }
         }
     }
+});
 
- })
-
-
-
-    export default Usuario;
+export default Usuario;
