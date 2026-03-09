@@ -423,8 +423,13 @@
   .animate-pulse {
     animation: var(--animate-pulse);
   }
+<<<<<<< HEAD
   .cursor-pointer {
     cursor: pointer;
+=======
+  .resize {
+    resize: both;
+>>>>>>> seccion06
   }
   .resize {
     resize: both;
@@ -935,13 +940,16 @@
     }
   }
   .focus\:border-indigo-500 {
+<<<<<<< HEAD
     &:focus {
       border-color: var(--color-indigo-500);
     }
   }
   .focus\:border-transparent {
+=======
+>>>>>>> seccion06
     &:focus {
-      border-color: transparent;
+      border-color: var(--color-indigo-500);
     }
   }
   .focus\:ring-2 {

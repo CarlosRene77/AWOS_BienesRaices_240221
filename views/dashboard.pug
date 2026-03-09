@@ -1,0 +1,60 @@
+extends layout/index
+
+block contenido
+    div.min-h-screen.bg-gray-50
+        // Navbar
+        nav.bg-white.shadow-lg
+            div.max-w-7xl.mx-auto.px-4
+                div.flex.justify-between.items-center.h-16
+                    div.flex.items-center
+                        h1.text-xl.font-bold.text-gray-800
+                            span.text-indigo-600 Bienes 
+                            | Raíces
+                    
+                    div.flex.items-center.gap-4
+                        if usuario && usuario.avatar
+                            img(src=usuario.avatar class="w-8 h-8 rounded-full border-2 border-indigo-200")
+                        span.text-gray-600= usuario ? usuario.name : 'Usuario'
+                        a(href="/logout" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition") Cerrar Sesión
+
+        // Contenido principal
+        div.max-w-7xl.mx-auto.px-4.py-8
+            h2.text-2xl.font-bold.text-gray-800.mb-6 Dashboard
+
+            if usuario
+                div.bg-white.rounded-lg.shadow-md.p-6.mb-6
+                    h3.text-lg.font-semibold.mb-4 Información de tu cuenta
+                    div.grid.grid-cols-1.gap-4(class='md:grid-cols-2')
+                        div
+                            p.text-gray-600 Nombre
+                            p.font-medium= usuario.name
+                        div
+                            p.text-gray-600 Email
+                            p.font-medium= usuario.email
+                        div
+                            p.text-gray-600 Proveedor
+                            p.font-medium
+                                span(class=`px-2 py-1 rounded-full text-xs ${
+                                    usuario.provider === 'facebook' ? 'bg-blue-100 text-blue-800' :
+                                    usuario.provider === 'google' ? 'bg-red-100 text-red-800' :
+                                    'bg-gray-100 text-gray-800'
+                                }`)= usuario.provider || 'local'
+                        div
+                            p.text-gray-600 Último acceso
+                            p.font-medium= new Date().toLocaleDateString()
+
+            div.grid.grid-cols-1.gap-6(class='md:grid-cols-3')
+                div.bg-white.rounded-lg.shadow-md.p-6
+                    div.text-indigo-600.text-3xl.mb-3 🏠
+                    h4.text-lg.font-semibold.mb-2 Mis Propiedades
+                    p.text-gray-600.text-sm Administra tus propiedades publicadas
+                
+                div.bg-white.rounded-lg.shadow-md.p-6
+                    div.text-indigo-600.text-3xl.mb-3 ❤️
+                    h4.text-lg.font-semibold.mb-2 Favoritos
+                    p.text-gray-600.text-sm Propiedades que te han gustado
+                
+                div.bg-white.rounded-lg.shadow-md.p-6
+                    div.text-indigo-600.text-3xl.mb-3 📊
+                    h4.text-lg.font-semibold.mb-2 Estadísticas
+                    p.text-gray-600.text-sm Visualiza tus métricas

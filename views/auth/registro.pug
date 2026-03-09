@@ -11,37 +11,213 @@ block contenido
                     span.font-light.text-indigo-600  Raíces
                 p.text-gray-500.mt-2.text-base Completa tus datos para registrarte
 
+                // CONTENEDOR DE MENSAJES CON TEMPORIZADOR
+                if errores
+                    #mensajes-container.max-w-md.mx-auto.my-6.space-y-2
+                        each error in errores
+                            .mensaje-error.relative.bg-red-50.border-l-4.border-red-500.text-red-700.p-4.rounded-r-lg.shadow-md.transform.transition-all.duration-500(class="hover:shadow-lg" role="alert" data-duracion="5000")
+                                .flex.items-center
+                                    .flex-shrink-0
+                                        svg.h-5.w-5.text-red-500(fill="currentColor" viewBox="0 0 20 20")
+                                            path(fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd")
+                                    .ml-3.flex-1
+                                        p.text-sm.font-medium= error.msg
+                                    .flex-shrink-0.ml-2
+                                        button.cerrar-mensaje.text-red-500(class="hover:text-red-700 transition-colors duration-200")
+                                            svg.h-4.w-4(fill="currentColor" viewBox="0 0 20 20")
+                                                path(fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd")
+                                // Barra de progreso
+                                .barra-progreso.absolute.bottom-0.left-0.h-1.bg-red-500.rounded-b-lg(style="width: 100%; transition: width 5s linear;")
+
             div.bg-white.rounded-lg.shadow-lg.p-6.border.border-gray-100
-                form.space-y-5
+                form.space-y-5(method="POST" action="/auth/registro" noValidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div.grid.grid-cols-1.gap-5(class="md:grid-cols-2")
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="nombreUsuario") Nombre completo
-                            input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Carlos Rene Morales" name="nombreUsuario" type="text")
+                            input#nombreUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(
+                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
+                                placeholder="Carlos Rene Morales"
+                                name="nombreUsuario"
+                                value=usuario ? usuario.nombreUsuario : ''
+                                type="text"
+                            )
                         
                         div
-                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="correoUsuario") Correo electrónico
-                            input#correoUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="usuario@gmail.com" name="correoUsuario" type="email")
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="emailUsuario") Correo electrónico
+                            input#emailUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(
+                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
+                                placeholder="usuario@gmail.com"
+                                name="emailUsuario"
+                                value=usuario ? usuario.emailUsuario : ''
+                                type="email"
+                            )
                         
-                        div
+                        // CONTRASEÑA CON OJO
+                        div.relative
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="passwordUsuario") Contraseña
-                            input#passwordUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Mínimo 8 caracteres" name="passwordUsuario" type="password")
-                        
+                            input#passwordUsuario.w-full.px-3.py-2.pr-10.border.border-gray-300.rounded-lg(
+                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
+                                placeholder="Mínimo 8 caracteres"
+                                name="passwordUsuario"
+                                type="password"
+                            )
+                            button#togglePassword.absolute.right-3.top-9.text-gray-500(class="hover:text-indigo-600 transition duration-200" type="button")
+                                svg.w-5.h-5(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                                    path#eyeOpen(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
+                                    path#eyeOpen2(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z")
+                                    line#eyeSlash(x1="4" y1="4" x2="20" y2="20" stroke-width="2" class="hidden" stroke="currentColor")
+
                         div
-                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="confirmarContraseña") Confirmar contraseña
-                            input#confirmacionPass.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Repite tu contraseña" name="confirmacionPass" type="password")
+                            label.block.text-sm.font-medium.text-gray-700.mb-1(for="confirmacionPass") Confirmar contraseña
+                            input#confirmacionPass.w-full.px-3.py-2.border.border-gray-300.rounded-lg(
+                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
+                                placeholder="Repite tu contraseña"
+                                name="confirmacionUsuario"
+                                type="password"
+                            )
 
                     div.flex.items-start.gap-2.mt-2
-                        input#terminos(type="checkbox" class="mt-1.w-4.h-4.text-indigo-600.border-gray-300.rounded")
+                        input#terminos.mt-1.w-4.h-4.text-indigo-600.border-gray-300.rounded(class="focus:ring-indigo-500" type="checkbox")
                         label.text-xs.text-gray-600(for="terminos")
                             | Acepto los 
-                            a.text-indigo-600(class="hover:underline" href="/terminos") Términos y condiciones
+                            a.text-indigo-600(class="hover:underline hover:text-indigo-800 transition-colors duration-200" href="/terminos") Términos y condiciones
                             |  y la 
-                            a.text-indigo-600(class="hover:underline" href="/privacidad") Política de privacidad
+                            a.text-indigo-600(class="hover:underline hover:text-indigo-800 transition-colors duration-200" href="/privacidad") Política de privacidad
 
-                    button.w-full.bg-indigo-600.text-white.py-2.px-4.rounded-lg.font-medium(class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit")
+                    button.w-full.bg-indigo-600.text-white.py-2.px-4.rounded-lg.font-medium.transition-all.duration-200(
+                        class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-800"
+                        type="submit"
+                    )
                         | Registrar Usuario
                     
                     div.flex.items-center.justify-center.gap-4.pt-2.text-sm
-                        a.text-gray-500(class="hover:text-indigo-600" href="/auth/login") Iniciar Sesión
+                        a.text-gray-500(class="hover:text-indigo-600 transition-colors duration-200" href="/auth/login") Iniciar Sesión
                         span.text-gray-300 •
-                        a.text-gray-500(class="hover:text-indigo-600" href="/auth/recuperacionPassword") Recuperar Contraseña
+                        a.text-gray-500(class="hover:text-indigo-600 transition-colors duration-200" href="/auth/recuperacionPassword") Recuperar Contraseña
+
+    // SCRIPT MEJORADO
+    script.
+        // Función para manejar los mensajes con temporizador
+        function inicializarMensajes() {
+            const mensajes = document.querySelectorAll('.mensaje-error');
+            
+            mensajes.forEach(mensaje => {
+                const duracion = parseInt(mensaje.dataset.duracion) || 5000;
+                const barraProgreso = mensaje.querySelector('.barra-progreso');
+                const botonCerrar = mensaje.querySelector('.cerrar-mensaje');
+                
+                // Estado para controlar el temporizador
+                let temporizador;
+                let tiempoRestante = duracion;
+                let inicioPausa;
+                
+                // Función para iniciar el temporizador
+                function iniciarTemporizador() {
+                    temporizador = setTimeout(() => {
+                        cerrarMensaje(mensaje);
+                    }, tiempoRestante);
+                }
+                
+                // Función para pausar el temporizador
+                function pausarTemporizador() {
+                    clearTimeout(temporizador);
+                    inicioPausa = Date.now();
+                    
+                    // Pausar la barra de progreso
+                    if (barraProgreso) {
+                        const anchoActual = window.getComputedStyle(barraProgreso).width;
+                        barraProgreso.style.transition = 'none';
+                        barraProgreso.style.width = anchoActual;
+                    }
+                }
+                
+                // Función para reanudar el temporizador
+                function reanudarTemporizador() {
+                    if (inicioPausa) {
+                        const tiempoTranscurrido = Date.now() - inicioPausa;
+                        tiempoRestante = Math.max(0, tiempoRestante - tiempoTranscurrido);
+                        
+                        if (tiempoRestante > 0) {
+                            if (barraProgreso) {
+                                const porcentajeRestante = (tiempoRestante / duracion) * 100;
+                                barraProgreso.style.transition = `width ${tiempoRestante}ms linear`;
+                                barraProgreso.style.width = '0%';
+                            }
+                            
+                            iniciarTemporizador();
+                        } else {
+                            cerrarMensaje(mensaje);
+                        }
+                    }
+                }
+                
+                // Función para cerrar mensaje
+                function cerrarMensaje(elemento) {
+                    clearTimeout(temporizador);
+                    elemento.classList.add('opacity-0', 'translate-x-2');
+                    
+                    setTimeout(() => {
+                        if (elemento.parentNode) {
+                            elemento.remove();
+                            
+                            // Si no quedan mensajes, eliminar el contenedor
+                            const contenedor = document.getElementById('mensajes-container');
+                            if (contenedor && contenedor.children.length === 0) {
+                                contenedor.style.display = 'none';
+                            }
+                        }
+                    }, 500);
+                }
+                
+                // Iniciar animación de la barra de progreso
+                if (barraProgreso) {
+                    setTimeout(() => {
+                        barraProgreso.style.width = '0%';
+                    }, 100);
+                }
+                
+                // Iniciar el temporizador
+                iniciarTemporizador();
+                
+                // Evento para cerrar manualmente
+                if (botonCerrar) {
+                    botonCerrar.addEventListener('click', () => cerrarMensaje(mensaje));
+                }
+                
+                // Eventos hover para pausar/reanudar
+                mensaje.addEventListener('mouseenter', pausarTemporizador);
+                mensaje.addEventListener('mouseleave', reanudarTemporizador);
+            });
+        }
+
+        // Función para el toggle de contraseña
+        function inicializarTogglePassword() {
+            const toggle = document.getElementById('togglePassword');
+            const password = document.getElementById('passwordUsuario');
+            const eyeOpen = document.getElementById('eyeOpen');
+            const eyeOpen2 = document.getElementById('eyeOpen2');
+            const eyeSlash = document.getElementById('eyeSlash');
+            
+            if (toggle && password && eyeSlash) {
+                toggle.addEventListener('click', () => {
+                    if (password.type === 'password') {
+                        password.type = 'text';
+                        eyeSlash.classList.remove('hidden');
+                        eyeOpen.classList.add('hidden');
+                        eyeOpen2.classList.add('hidden');
+                    } else {
+                        password.type = 'password';
+                        eyeSlash.classList.add('hidden');
+                        eyeOpen.classList.remove('hidden');
+                        eyeOpen2.classList.remove('hidden');
+                    }
+                });
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarMensajes();
+            inicializarTogglePassword();
+        });

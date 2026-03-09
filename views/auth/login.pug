@@ -1,41 +1,140 @@
 extends ../layout/index
 
 block contenido
-    div.min-h-screen.bg-gray-50.flex.items-center.justify-center.p-4
-        div.max-w-md.w-full
-            div.text-center.mb-8
-                div.inline-block.p-3.bg-indigo-100.rounded-full.mb-4
-                    svg.h-8.w-8.text-indigo-600.mx-auto(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+    div(class="min-h-screen bg-gray-50 flex items-center justify-center p-4")
+        div(class="max-w-md w-full")
+            
+            div(class="text-center mb-8")
+                div(class="inline-block p-3 bg-indigo-100 rounded-full mb-4")
+                    svg(class="h-8 w-8 text-indigo-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24")
                         path(stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6")
-                h1.text-3xl.font-bold.text-gray-900 Bienes
-                    span.font-light.text-indigo-600  Raíces
-                p.text-gray-500.mt-2.text-base Accede a tu cuenta
 
-            div.bg-white.rounded-lg.shadow-lg.p-6.border.border-gray-100
-                form.space-y-5
-                    div
-                        label.block.text-sm.font-medium.text-gray-700.mb-1(for="correoUsuario") Correo electrónico
-                        input#correoUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent" placeholder="tu@email.com" name="correoUsuario" type="email")
-                    
-                    div
-                        label.block.text-sm.font-medium.text-gray-700.mb-1(for="passwordUsuario") Contraseña
-                        input#passwordUsuario.w-full.px-3.py-2.border.border-gray-300.rounded-lg(class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent" placeholder="••••••••" name="passwordUsuario" type="password")
-                    
-                    div.flex.items-center.justify-between
-                        label.flex.items-center.gap-2.text-sm.text-gray-600.cursor-pointer
-                            input#verP1(type="checkbox" class="rounded.border-gray-300.text-indigo-600" onclick="document.getElementById('passwordUsuario').type = this.checked ? 'text' : 'password'")
-                            span Mostrar contraseña
-                        
-                        a.text-sm.text-indigo-600(class="hover:text-indigo-800" href="/auth/recuperacionPassword") ¿Olvidaste tu contraseña?
+                h1(class="text-3xl font-bold text-gray-900")
+                    | Bienes 
+                    span(class="font-light text-indigo-600") Raíces
 
-                    button.w-full.bg-indigo-600.text-white.py-2.px-4.rounded-lg.font-medium(class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" type="submit")
+                p(class="text-gray-500 mt-2 text-base") Accede a tu cuenta
+
+            div(class="bg-white rounded-lg shadow-lg p-6 border border-gray-100")
+                form(method="POST" action="/auth/login" class="space-y-5")
+
+                    div
+                        label(for="correoUsuario" class="block text-sm font-medium text-gray-700 mb-1") Correo electrónico
+                        input#correoUsuario(
+                            type="email"
+                            name="correoUsuario"
+                            placeholder="tu@email.com"
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        )
+
+                    div
+                        label(for="passwordUsuario" class="block text-sm font-medium text-gray-700 mb-1") Contraseña
+                        div(class="relative")
+                            input#passwordUsuario(
+                                type="password"
+                                name="passwordUsuario"
+                                placeholder="••••••••"
+                                required
+                                class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            )
+
+                            button(
+                                type="button"
+                                onclick="togglePassword()"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3"
+                            )
+                                svg#eyeIcon(
+                                    class="h-5 w-5 text-gray-400 transition-all duration-300"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                )
+                                    path(
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    )
+                                    path(
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    )
+                                    line#eyeSlash(
+                                        x1="3"
+                                        y1="3"
+                                        x2="21"
+                                        y2="21"
+                                        stroke-width="2"
+                                        class="opacity-0 translate-x-2 transition-all duration-300"
+                                    )
+
+                    div(class="flex items-center justify-between")
+                        a(href="/auth/recuperacionPassword" class="text-sm text-indigo-600 hover:text-indigo-800") ¿Olvidaste tu contraseña?
+
+                    button(
+                        type="submit"
+                        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition"
+                    )
                         | Iniciar Sesión
-                    
-                    div.relative.my-4
-                        div.absolute.inset-0.flex.items-center
-                            div.w-full.border-t.border-gray-200
-                        div.relative.flex.justify-center.text-xs
-                            span.px-2.bg-white.text-gray-400 O
-                    
-                    a.block.text-center.text-sm.text-gray-600.bg-gray-100.py-2.px-4.rounded-lg.border.border-gray-200(class="hover:bg-gray-200" href="/auth/registro")
+
+                    div(class="relative my-4")
+                        div(class="absolute inset-0 flex items-center")
+                            div(class="w-full border-t border-gray-200")
+                        div(class="relative flex justify-center text-xs")
+                            span(class="px-2 bg-white text-gray-400") O
+
+                    a(
+                        href="/auth/facebook"
+                        class="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition mb-3"
+                    )
+                        svg(class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24")
+                            path(d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.019 4.388 10.999 10.125 11.927v-8.437H7.078v-3.49h3.047V9.797c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.492 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.072 24 18.092 24 12.073")
+                        | Continuar con Facebook
+
+                    a(
+                        href="/auth/google"
+                        class="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition shadow-sm mb-3"
+                    )
+                        svg(class="h-5 w-5" viewBox="0 0 24 24")
+                            path(
+                                fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            )
+                            path(
+                                fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            )
+                            path(
+                                fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                            )
+                            path(
+                                fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            )
+                        | Continuar con Google
+
+                    a(
+                        href="/auth/registro"
+                        class="block text-center text-sm text-gray-600 bg-gray-100 py-2 px-4 rounded-lg border border-gray-200 mt-4 hover:bg-gray-200 transition"
+                    )
                         | Crear una cuenta nueva
+
+    script.
+        function togglePassword() {
+            const input = document.getElementById('passwordUsuario');
+            const slash = document.getElementById('eyeSlash');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                slash.classList.remove('opacity-0', 'translate-x-2');
+                slash.classList.add('opacity-100', 'translate-x-0');
+            } else {
+                input.type = 'password';
+                slash.classList.remove('opacity-100', 'translate-x-0');
+                slash.classList.add('opacity-0', 'translate-x-2');
+            }
+        }

@@ -1,5 +1,5 @@
 import express from "express";
-import { formularioLogin,formularioRegistro,formulariorecuperacion } from "../controllers/usuarioController.js";
+import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario, paginaConfirmacion } from "../controllers/usuarioController.js";
 
 //creamos el ruteador
 const router = express.Router();
@@ -7,6 +7,18 @@ const router = express.Router();
 router.get("/login",formularioLogin);
 router.get("/registro",formularioRegistro);
 router.get("/recuperacionPassword",formulariorecuperacion);
+router.get("/confirma/:token", paginaConfirmacion)
+
+
+//POST
+router.post("/registro", registrarUsuario)
+router.post("/createUser", (req, res) => {
+    console.log("Se ha solicitado crear un nuevo usuario.")
+    res.json({
+        status: 200,
+        message: "Se ha solicitado la creación de un nuevo usuario."
+    })
+})
 
 
 //Definimos las rutas 
@@ -37,8 +49,8 @@ router.post("/createUser", (req, res) => {
     console.log("Procesando una peticion POST");
 
     const nuevoUsuario = {
-        nombre: "Adrian Rios Gomez",
-        correo: "240165@utxicotepec.edu.mx"
+        nombre: "Carlos Rene Morales",
+        correo: "240221@utxicotepec.edu.mx"
     };
 
     res.json({
@@ -53,8 +65,8 @@ router.put("/updateUser", (req, res) => {
     console.log("Procesando una peticion PUT");
 
     const usuario = {
-        nombre: "Adrian Rios Gomez",
-        correo: "240165@utxicotepec.edu.mx"
+        nombre: "Rene Morales",
+        correo: "240221@utxicotepec.edu.mx"
     };
 
     const usuarioActualizado = {
@@ -75,8 +87,8 @@ router.patch("/updatePassword/:nuevoPassword", (req, res) => {
     console.log("Procesando una peticion PATCH");
 
     const usuario = {
-        nombre: "Adrian Rios Gomez",
-        correo: "240165@utxicotepec.edu.mx",
+        nombre: "Carlos Rene Morales Santos",
+        correo: "240221@utxicotepec.edu.mx",
         password: "abcde"
     };
 
