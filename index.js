@@ -74,6 +74,18 @@ app.use("/auth", socialRoutes); // Agregamos las rutas sociales
 
 await connectDB();
 
+// Cachear el error
+app.use((err, req, res, next) => {
+    if(err.code === "EBADCSRFTOKEN") {
+        return res.status(403).render("templates/mensaje", {
+            pagina: "Error de seguridad",
+            title: "Error CSRF",
+            msg: "El formulario expiró o fue manipulado. Recarga la pagina."
+        });
+    }
+    next(err);
+});
+
 
 
 // Ruta de prueba para dashboard (opcional)
