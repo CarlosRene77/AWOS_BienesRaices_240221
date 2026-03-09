@@ -186,5 +186,14 @@ const paginaConfirmacion = async (req,res) =>
 
 }
 
+const resetearPassword = (req, res) => {
+    const { correoUsuario } = req.body;
+
+    console.log(`El usuario con correo: ${correoUsuario} esta solicitando un reseteo de contraseña.`);
+
+    res.send("Solicitud recibida");
+}
+
+
 export {
-    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion, paginaConfirmacion}
+    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion, paginaConfirmacion, resetearPassword}
