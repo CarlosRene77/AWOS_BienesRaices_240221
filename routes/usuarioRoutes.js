@@ -1,5 +1,5 @@
 import express from "express";
-import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario, paginaConfirmacion, resetearPassword } from "../controllers/usuarioController.js";
+import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario, paginaConfirmacion, resetearPassword,formularioActualizacionPassword,actualizarPassword } from "../controllers/usuarioController.js";
 
 //creamos el ruteador
 const router = express.Router();
@@ -8,11 +8,13 @@ router.get("/login",formularioLogin);
 router.get("/registro",formularioRegistro);
 router.get("/recuperacionPassword",formulariorecuperacion);
 router.get("/confirma/:token", paginaConfirmacion)
+router.get("/actualizacionPassword/:token", formularioActualizacionPassword)
 
 
 //POST
 router.post("/registro", registrarUsuario)
 router.post("/recuperacionPassword", resetearPassword)
+router.post("/actualizacionPassword/:token", actualizarPassword)
 
 
 

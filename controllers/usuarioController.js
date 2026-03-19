@@ -1,7 +1,7 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
 import { generarToken} from "../lib/tokens.js";
-import { emailRegistro } from "../lib/emails.js";
+import { emailRegistro, emailResetearPassword } from "../lib/emails.js";
 
 const formularioLogin = (req, res) => {
     res.render('auth/login', {pagina: "Inicia Sesión"});
@@ -13,6 +13,34 @@ const formularioRegistro = (req, res) => {
 
 const formulariorecuperacion = (req, res) =>{
     res.render('auth/recuperacionPassword',  {pagina: "Recupera tu Contraseña"});
+}
+
+const formularioActualizacionPassword = async (req, res) =>{
+    console.log(req.params); // Para ver qué llega
+    const { token } = req.params;
+    console.log(`El usuario con token: ${token} esta intentando actualizar su contraseña`);
+
+    // Buscar el usuario por token
+    const usuarioSolicitante = await Usuario.findOne({ where: { token } });
+    
+    // Validar si el token existe
+    if (!usuarioSolicitante) {
+        return res.render("templates/mensaje", {
+            title: "Error",
+            msg: "El enlace no es válido o ha expirado",
+            buttonVisibility: true,
+            buttonText: "Solicitar nuevamente",
+            buttonURL: "/auth/recuperacionPassword"
+        });
+    }
+    
+    console.log(`El usuario dueño del token es: ${usuarioSolicitante.email}`);
+    
+    // Renderizar el formulario con el token
+    res.render('auth/resetearPassword',  {
+        pagina: "Ingresa tu nueva contraseña",
+        token: token  // ← Pasa el token a la vista
+    });
 }
 
 const registrarUsuario = async(req,res) =>
@@ -186,14 +214,92 @@ const paginaConfirmacion = async (req,res) =>
 
 }
 
-const resetearPassword = (req, res) => {
+const resetearPassword = async (req, res) => {
     const { correoUsuario } = req.body;
+    console.log(`El usuario con correo: ${correoUsuario} esta solicitando un reseteo de contraseña.`)
 
-    console.log(`El usuario con correo: ${correoUsuario} esta solicitando un reseteo de contraseña.`);
+    // Validaciones del Frontend 
+    await check('correoUsuario').notEmpty().withMessage("El correo electrónico no puede ser vacío")
+        .isEmail().withMessage("El correo electrónico no tiene un formato adecuado").run(req)
+    
+    let resultadoValidacion = validationResult(req);
 
-    res.send("Solicitud recibida");
+    if(!resultadoValidacion.isEmpty())
+    {
+        return res.render("auth/recuperacionPassword", {  // ← AGREGAR return
+            pagina: "Error, correo inválido", 
+            errores: resultadoValidacion.array(), 
+            usuario: { emailUsuario: correoUsuario }
+        });
+    }
+
+    // Validacion 1
+    const usuario = await Usuario.findOne({where: {email: correoUsuario}});
+    
+    if(!usuario)
+    {
+        return res.render("templates/mensaje",{  // ← AGREGAR return
+            title: "Error, buscando la cuenta",
+            msg: `No se ha encontrado ninguna cuenta asociada al correo ${correoUsuario}`,
+            buttonVisibility: true,
+            buttonText: "Intentalo de nuevo",
+            buttonURL: "/auth/recuperacionPassword"
+        });
+    }
+    else{
+        if(!usuario.confirmed)
+        {
+            return res.render("templates/mensaje",{  // ← AGREGAR return
+                title: "Error, la cuenta no esta confirmada",
+                msg: `La cuenta asociada al correo: ${correoUsuario}, no ha sido validada`,
+                buttonVisibility: true,
+                buttonText: "Intentalo de nuevo",
+                buttonURL: "/auth/recuperacionPassword"
+            });
+        }
+        else{
+            usuario.token = generarToken();
+            await usuario.save();
+            await emailResetearPassword({
+                nombre: usuario.name,
+                email: usuario.email,
+                token: usuario.token
+            })
+            
+            return res.render("templates/mensaje", {  // ← AGREGAR return
+                title: "Correo para la restauración de contraseñas",
+                msg: `Un paso mas, te hemos enviado un correo electrónico con la liga segura`,
+                buttonVisibility: false
+            });
+        }
+    }
+}
+
+const actualizarPassword = async(req, res) => {
+    const { token } = req.params;  // ← Token de la URL
+    const { passwordUsuario, confirmacionUsuario } = req.body;  // ← Campos del formulario
+    
+    console.log(`Actualizando contraseña para token: ${token}`);
+
+    // Validaciones
+    await check('passwordUsuario').notEmpty().withMessage("La contraseña no puede estar vacía")
+        .isLength({ min: 8, max: 30 }).withMessage("La contraseña debe tener entre 8 y 30 caracteres").run(req);
+    await check('confirmacionUsuario').equals(passwordUsuario).withMessage("Ambas contraseñas deben ser iguales").run(req);
+
+    let resultadoValidacion = validationResult(req);
+
+    if (!resultadoValidacion.isEmpty()) {
+        return res.render("auth/resetearPassword", {  // ← Sin slash al final
+            pagina: "Error al intentar actualizar la contraseña",
+            errores: resultadoValidacion.array(),
+            token: token  // ← Pasa el token de vuelta
+        });
+    }
+
+    // Aquí va la lógica para actualizar en la BD
+    // Buscar usuario por token, actualizar password, limpiar token
 }
 
 
 export {
-    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion, paginaConfirmacion, resetearPassword}
+    formularioLogin, formularioRegistro,registrarUsuario, formulariorecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword, actualizarPassword}
