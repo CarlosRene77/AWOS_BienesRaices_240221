@@ -88,10 +88,52 @@ const Usuario = db.define('Usuario', {
     },
     // ✅ FIN DE NUEVOS CAMPOS
 
+    // ✅ CAMPOS PARA BLOQUEO Y SEGURIDAD
+    intentos_fallidos: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        field: 'intentos_fallidos'
+    },
+
+    bloqueado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        field: 'bloqueado'
+    },
+
+    fecha_bloqueo: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'fecha_bloqueo'
+    },
+        unlock_token: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        field: 'unlock_token'
+    },
+
+    unlock_token_expires_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'unlock_token_expires_at'
+    },
+
+    ultimo_login: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'ultimo_login'
+    },
+    // ✅ FIN CAMPOS BLOQUEO
+
     token: {
         type: DataTypes.STRING(255),
         allowNull: true,
         field: 'token'
+    },
+        token_expires_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'token_expires_at'
     },
 
     tokenExpiration: {
@@ -133,5 +175,10 @@ const Usuario = db.define('Usuario', {
         }
     }
 });
+
+// Metodos de instancia 
+Usuario.prototype.validarPassword = async function(password) {
+    return await bcrypt.compare(password, this.password);
+}
 
 export default Usuario;

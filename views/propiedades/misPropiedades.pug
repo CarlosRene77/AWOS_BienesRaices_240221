@@ -1,0 +1,95 @@
+extends ../layout/index
+
+block contenido
+    // ENCABEZADO GLOBAL CON ICONO DEL USUARIO
+    div.bg-white.shadow-md.sticky.top-0.z-50
+        div.container.mx-auto.px-4.py-3
+            div.flex.items-center.justify-between
+                // Logo
+                div.flex.items-center.space-x-3
+                    a(href="/" class="flex items-center space-x-2")
+                        div.bg-indigo-600.rounded-lg.p-2
+                            svg.h-6.w-6.text-white(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                                path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6")
+                        span.text-xl.font-bold.text-gray-800 Bienes
+                            span.text-indigo-600 Raíces
+                
+                // Perfil del usuario con icono
+                div.relative
+                    button#userMenuButton.flex.items-center.space-x-3.bg-gray-50.rounded-full.p-2.pr-4(class="hover:bg-gray-100 transition-colors duration-200")
+                        // Avatar con iniciales
+                        div.w-10.h-10.bg-gradient-to-r.from-indigo-500.to-purple-600.rounded-full.flex.items-center.justify-center.text-white.font-bold.text-lg
+                            if usuario.nombre
+                                = usuario.nombre.charAt(0).toUpperCase()
+                            else
+                                U
+                        div.hidden(class="md:block")
+                            p.text-sm.font-medium.text-gray-700 #{usuario.nombre}
+                            p.text-xs.text-gray-500 #{usuario.email}
+                        svg.w-5.h-5.text-gray-400(xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor")
+                            path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7")
+                    
+                    // Menú desplegable
+                    div#userMenu.absolute.right-0.mt-2.w-64.bg-white.rounded-lg.shadow-xl.border.border-gray-100.hidden.transition-all.duration-200.z-50
+                        div.p-4.border-b.border-gray-100
+                            p.font-semibold.text-gray-800 #{usuario.nombre}
+                            p.text-sm.text-gray-500 #{usuario.email}
+                        div.py-2
+                            a.block.px-4.py-2.text-sm.text-gray-700(class="hover:bg-gray-50 hover:text-indigo-600 transition-colors" href="/propiedades/mis-propiedades")
+                                svg.inline.w-4.h-4.mr-2(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                                    path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6")
+                                | Mis Propiedades
+                        div.border-t.border-gray-100.pt-2.pb-2
+                            a.block.px-4.py-2.text-sm.text-red-600(class="hover:bg-red-50 transition-colors" href="/logout")
+                                svg.inline.w-4.h-4.mr-2(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                                    path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1")
+                                | Cerrar Sesión
+
+    // CONTENIDO PRINCIPAL
+    div.container.mx-auto.px-4.py-8
+        // Mensaje de bienvenida
+        div.bg-gradient-to-r.from-indigo-50.to-purple-50.rounded-lg.p-6.mb-8.border.border-indigo-100
+            div.flex.items-center.justify-between.flex-wrap.gap-4
+                div
+                    h1.text-2xl.font-bold.text-gray-800.mb-2
+                        | ¡Bienvenido de vuelta, 
+                        span.text-indigo-600 #{usuario.nombre}
+                        | !
+                    p.text-gray-600.mt-1.text-base
+                        | Gestiona tus propiedades desde aquí
+
+        // Sección de Mis Propiedades
+        div
+            div.flex.items-center.justify-between.mb-6
+                h2.text-2xl.font-bold.text-gray-800 Mis Propiedades
+                span.bg-gray-100.text-gray-600.px-3.py-1.rounded-full.text-sm
+                    | Total: #{propiedades.length} propiedad(es)
+
+            if propiedades.length === 0
+                // Mensaje cuando no hay propiedades
+                div.bg-white.rounded-lg.shadow-sm.border-2.border-dashed.border-gray-200.p-12.text-center
+                    svg.h-16.w-16.text-gray-300.mx-auto.mb-4(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                        path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4")
+                    h3.text-xl.font-medium.text-gray-600.mb-2 No tienes propiedades publicadas
+                    p.text-gray-500.mb-6 Comienza publicando tu primera propiedad
+            else
+                // Aquí irá el grid de propiedades cuando tengamos datos
+                p.text-gray-500 Tienes #{propiedades.length} propiedades
+
+    // Script para el menú desplegable
+    script.
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userMenu = document.getElementById('userMenu');
+        
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenu.classList.toggle('hidden');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }

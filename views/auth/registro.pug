@@ -53,29 +53,93 @@ block contenido
                                 type="email"
                             )
                         
-                        // CONTRASEÑA CON OJO
-                        div.relative
+                        // CONTRASEÑA CON OJO (estilo login)
+                        div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="passwordUsuario") Contraseña
-                            input#passwordUsuario.w-full.px-3.py-2.pr-10.border.border-gray-300.rounded-lg(
-                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
-                                placeholder="Mínimo 8 caracteres"
-                                name="passwordUsuario"
-                                type="password"
-                            )
-                            button#togglePassword.absolute.right-3.top-9.text-gray-500(class="hover:text-indigo-600 transition duration-200" type="button")
-                                svg.w-5.h-5(fill="none" stroke="currentColor" viewBox="0 0 24 24")
-                                    path#eyeOpen(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
-                                    path#eyeOpen2(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z")
-                                    line#eyeSlash(x1="4" y1="4" x2="20" y2="20" stroke-width="2" class="hidden" stroke="currentColor")
+                            div.relative
+                                input#passwordUsuario(
+                                    type="password"
+                                    name="passwordUsuario"
+                                    placeholder="Mínimo 8 caracteres"
+                                    class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
+                                )
+                                button(
+                                    type="button"
+                                    onclick="togglePassword('passwordUsuario')"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
+                                    aria-label="Mostrar u ocultar contraseña"
+                                )
+                                    svg.eye-icon(
+                                        class="h-5 w-5 text-gray-400 transition-all duration-300"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        data-target="passwordUsuario"
+                                    )
+                                        path(
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        )
+                                        path(
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                        )
+                                        line.eye-slash(
+                                            x1="3"
+                                            y1="3"
+                                            x2="21"
+                                            y2="21"
+                                            stroke-width="2"
+                                            class="opacity-0 translate-x-2 transition-all duration-300"
+                                        )
 
+                        // CONFIRMAR CONTRASEÑA CON OJO (estilo login)
                         div
                             label.block.text-sm.font-medium.text-gray-700.mb-1(for="confirmacionPass") Confirmar contraseña
-                            input#confirmacionPass.w-full.px-3.py-2.border.border-gray-300.rounded-lg(
-                                class="focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition-all duration-200"
-                                placeholder="Repite tu contraseña"
-                                name="confirmacionUsuario"
-                                type="password"
-                            )
+                            div.relative
+                                input#confirmacionPass(
+                                    type="password"
+                                    name="confirmacionUsuario"
+                                    placeholder="Repite tu contraseña"
+                                    class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
+                                )
+                                button(
+                                    type="button"
+                                    onclick="togglePassword('confirmacionPass')"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
+                                    aria-label="Mostrar u ocultar contraseña"
+                                )
+                                    svg.eye-icon(
+                                        class="h-5 w-5 text-gray-400 transition-all duration-300"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        data-target="confirmacionPass"
+                                    )
+                                        path(
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        )
+                                        path(
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                        )
+                                        line.eye-slash(
+                                            x1="3"
+                                            y1="3"
+                                            x2="21"
+                                            y2="21"
+                                            stroke-width="2"
+                                            class="opacity-0 translate-x-2 transition-all duration-300"
+                                        )
 
                     div.flex.items-start.gap-2.mt-2
                         input#terminos.mt-1.w-4.h-4.text-indigo-600.border-gray-300.rounded(class="focus:ring-indigo-500" type="checkbox")
@@ -107,24 +171,20 @@ block contenido
                 const barraProgreso = mensaje.querySelector('.barra-progreso');
                 const botonCerrar = mensaje.querySelector('.cerrar-mensaje');
                 
-                // Estado para controlar el temporizador
                 let temporizador;
                 let tiempoRestante = duracion;
                 let inicioPausa;
                 
-                // Función para iniciar el temporizador
                 function iniciarTemporizador() {
                     temporizador = setTimeout(() => {
                         cerrarMensaje(mensaje);
                     }, tiempoRestante);
                 }
                 
-                // Función para pausar el temporizador
                 function pausarTemporizador() {
                     clearTimeout(temporizador);
                     inicioPausa = Date.now();
                     
-                    // Pausar la barra de progreso
                     if (barraProgreso) {
                         const anchoActual = window.getComputedStyle(barraProgreso).width;
                         barraProgreso.style.transition = 'none';
@@ -132,7 +192,6 @@ block contenido
                     }
                 }
                 
-                // Función para reanudar el temporizador
                 function reanudarTemporizador() {
                     if (inicioPausa) {
                         const tiempoTranscurrido = Date.now() - inicioPausa;
@@ -140,19 +199,17 @@ block contenido
                         
                         if (tiempoRestante > 0) {
                             if (barraProgreso) {
-                                const porcentajeRestante = (tiempoRestante / duracion) * 100;
                                 barraProgreso.style.transition = `width ${tiempoRestante}ms linear`;
                                 barraProgreso.style.width = '0%';
                             }
-                            
                             iniciarTemporizador();
                         } else {
                             cerrarMensaje(mensaje);
                         }
+                        inicioPausa = null;
                     }
                 }
                 
-                // Función para cerrar mensaje
                 function cerrarMensaje(elemento) {
                     clearTimeout(temporizador);
                     elemento.classList.add('opacity-0', 'translate-x-2');
@@ -160,8 +217,6 @@ block contenido
                     setTimeout(() => {
                         if (elemento.parentNode) {
                             elemento.remove();
-                            
-                            // Si no quedan mensajes, eliminar el contenedor
                             const contenedor = document.getElementById('mensajes-container');
                             if (contenedor && contenedor.children.length === 0) {
                                 contenedor.style.display = 'none';
@@ -170,54 +225,41 @@ block contenido
                     }, 500);
                 }
                 
-                // Iniciar animación de la barra de progreso
                 if (barraProgreso) {
                     setTimeout(() => {
                         barraProgreso.style.width = '0%';
                     }, 100);
                 }
                 
-                // Iniciar el temporizador
                 iniciarTemporizador();
                 
-                // Evento para cerrar manualmente
                 if (botonCerrar) {
                     botonCerrar.addEventListener('click', () => cerrarMensaje(mensaje));
                 }
                 
-                // Eventos hover para pausar/reanudar
                 mensaje.addEventListener('mouseenter', pausarTemporizador);
                 mensaje.addEventListener('mouseleave', reanudarTemporizador);
             });
         }
 
-        // Función para el toggle de contraseña
-        function inicializarTogglePassword() {
-            const toggle = document.getElementById('togglePassword');
-            const password = document.getElementById('passwordUsuario');
-            const eyeOpen = document.getElementById('eyeOpen');
-            const eyeOpen2 = document.getElementById('eyeOpen2');
-            const eyeSlash = document.getElementById('eyeSlash');
+        // Función para toggle de contraseña (mismo estilo que login)
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            const eyeSlash = button.querySelector('.eye-slash');
             
-            if (toggle && password && eyeSlash) {
-                toggle.addEventListener('click', () => {
-                    if (password.type === 'password') {
-                        password.type = 'text';
-                        eyeSlash.classList.remove('hidden');
-                        eyeOpen.classList.add('hidden');
-                        eyeOpen2.classList.add('hidden');
-                    } else {
-                        password.type = 'password';
-                        eyeSlash.classList.add('hidden');
-                        eyeOpen.classList.remove('hidden');
-                        eyeOpen2.classList.remove('hidden');
-                    }
-                });
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeSlash.classList.remove('opacity-0', 'translate-x-2');
+                eyeSlash.classList.add('opacity-100', 'translate-x-0');
+            } else {
+                input.type = 'password';
+                eyeSlash.classList.remove('opacity-100', 'translate-x-0');
+                eyeSlash.classList.add('opacity-0', 'translate-x-2');
             }
         }
 
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
             inicializarMensajes();
-            inicializarTogglePassword();
         });

@@ -2,11 +2,12 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import express from "express";
-import session from 'express-session'; // ✅ NUEVA IMPORTACIÓN
+import session from 'express-session';
 import usuarioRoutes from "./routes/usuarioRoutes.js";
-import socialRoutes from "./routes/socialRoutes.js"; // ✅ NUEVA IMPORTACIÓN
+import socialRoutes from "./routes/socialRoutes.js";
+import propiedadRoutes from "./routes/propiedadRoutes.js";
 import { connectDB } from "./Config/db.js";
-import { Op } from 'sequelize'; // ✅ NUEVA IMPORTACIÓN (para el controlador)
+import { Op } from 'sequelize';
 import cookieParser from 'cookie-parser';
 import csurf from '@dr.pogodin/csurf';
 
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /*
-// ✅ NUEVO: Configuración de sesiones
+// NUEVO: Configuración de sesiones
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secreto_bienes_raices_2024',
     resave: false,
@@ -68,9 +69,10 @@ app.use((req, res, next) =>
 
 
 
-// ✅ MODIFICADO: Routing - Ahora usamos ambas rutas
+// MODIFICADO: Routing - Ahora usamos ambas rutas
 app.use("/auth", usuarioRoutes);
 app.use("/auth", socialRoutes); // Agregamos las rutas sociales
+app.use("/propiedades", propiedadRoutes);
 
 await connectDB();
 
@@ -104,11 +106,30 @@ app.get("/logout", (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error('Error al cerrar sesión:', err);
-            return res.redirect("/dashboard");
+            return res.redirect("/propiedades/mis-propiedades");
         }
         res.redirect("/auth/login");
     });
 });
+
+// index.js - AGREGAR AL FINAL DEL ARCHIVO, DESPUÉS DE LAS RUTAS Y ANTES DE app.listen
+import cron from 'node-cron';
+import { cleanExpiredAccounts } from './jobs/cleanExpiredAccounts.js';
+
+//  Configurar CRON para ejecutar cada hora (eliminar cuentas expiradas)
+cron.schedule('0 * * * *', async () => {
+    console.log('🕐 Ejecutando limpieza de cuentas expiradas...');
+    try {
+        const eliminadas = await cleanExpiredAccounts();
+        if (eliminadas > 0) {
+            console.log(`✅ ${new Date().toLocaleString()} - Eliminadas ${eliminadas} cuentas expiradas`);
+        }
+    } catch (error) {
+        console.error('❌ Error en limpieza automática:', error);
+    }
+});
+
+console.log('🕒 CRON job programado: Limpieza de cuentas expiradas cada hora');
 
 app.listen(process.env.PORT ?? 3000, ()=> {
     console.log(`El servidor está iniciado en el puerto ${process.env.PORT ?? 3000}`)
