@@ -15,9 +15,28 @@ block contenido
 
                 p(class="text-gray-500 mt-2 text-base") Accede a tu cuenta
 
-            div(class="bg-white rounded-lg shadow-lg p-6 border border-gray-100")
-                form(method="POST" action="/auth/login" class="space-y-5")
+            // CONTENEDOR DE MENSAJES CON TEMPORIZADOR
+            if errores
+                div#mensajes-container.max-w-md.mx-auto.my-6.space-y-2
+                    each error in errores
+                        div.mensaje-error.relative.bg-red-50.border-l-4.border-red-500.text-red-700.p-4.rounded-r-lg.shadow-md.transform.transition-all.duration-500(class="hover:shadow-lg" role="alert" data-duracion="5000")
+                            div.flex.items-center
+                                div.flex-shrink-0
+                                    svg.h-5.w-5.text-red-500(fill="currentColor" viewBox="0 0 20 20")
+                                        path(fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd")
+                                div.ml-3.flex-1
+                                    p.text-sm.font-medium= error.msg
+                                div.flex-shrink-0.ml-2
+                                    button.cerrar-mensaje.text-red-500(class="hover:text-red-700 transition-colors duration-200")
+                                        svg.h-4.w-4(fill="currentColor" viewBox="0 0 20 20")
+                                            path(fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd")
+                            // Barra de progreso
+                            div.barra-progreso.absolute.bottom-0.left-0.h-1.bg-red-500.rounded-b-lg(style="width: 100%; transition: width 5s linear;")
 
+            div(class="bg-white rounded-lg shadow-lg p-6 border border-gray-100")
+                form.space-y-5(method="POST" action="/auth/login" novalidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    
                     div
                         label(for="correoUsuario" class="block text-sm font-medium text-gray-700 mb-1") Correo electrónico
                         input#correoUsuario(
@@ -25,7 +44,7 @@ block contenido
                             name="correoUsuario"
                             placeholder="tu@email.com"
                             required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
                         )
 
                     div
@@ -36,13 +55,14 @@ block contenido
                                 name="passwordUsuario"
                                 placeholder="••••••••"
                                 required
-                                class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
                             )
 
                             button(
                                 type="button"
                                 onclick="togglePassword()"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
+                                aria-label="Mostrar u ocultar contraseña"
                             )
                                 svg#eyeIcon(
                                     class="h-5 w-5 text-gray-400 transition-all duration-300"
@@ -72,11 +92,11 @@ block contenido
                                     )
 
                     div(class="flex items-center justify-between")
-                        a(href="/auth/recuperacionPassword" class="text-sm text-indigo-600 hover:text-indigo-800") ¿Olvidaste tu contraseña?
+                        a(href="/auth/recuperacionPassword" class="text-sm text-indigo-600 hover:text-indigo-800 hover:underline transition") ¿Olvidaste tu contraseña?
 
                     button(
                         type="submit"
-                        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition"
+                        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     )
                         | Iniciar Sesión
 
@@ -88,7 +108,7 @@ block contenido
 
                     a(
                         href="/auth/facebook"
-                        class="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition mb-3"
+                        class="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-3"
                     )
                         svg(class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24")
                             path(d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.019 4.388 10.999 10.125 11.927v-8.437H7.078v-3.49h3.047V9.797c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.492 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.072 24 18.092 24 12.073")
@@ -96,7 +116,7 @@ block contenido
 
                     a(
                         href="/auth/google"
-                        class="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition shadow-sm mb-3"
+                        class="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 shadow-sm mb-3"
                     )
                         svg(class="h-5 w-5" viewBox="0 0 24 24")
                             path(
@@ -119,7 +139,7 @@ block contenido
 
                     a(
                         href="/auth/registro"
-                        class="block text-center text-sm text-gray-600 bg-gray-100 py-2 px-4 rounded-lg border border-gray-200 mt-4 hover:bg-gray-200 transition"
+                        class="block text-center text-sm text-gray-600 bg-gray-100 py-2 px-4 rounded-lg border border-gray-200 mt-4 hover:bg-gray-200 transition focus:outline-none focus:ring-2 focus:ring-gray-300"
                     )
                         | Crear una cuenta nueva
 
@@ -138,3 +158,98 @@ block contenido
                 slash.classList.add('opacity-0', 'translate-x-2');
             }
         }
+
+    script.
+        // Función para manejar los mensajes con temporizador
+        document.addEventListener('DOMContentLoaded', function() {
+            const mensajes = document.querySelectorAll('.mensaje-error');
+            
+            mensajes.forEach(mensaje => {
+                const duracion = parseInt(mensaje.dataset.duracion) || 5000;
+                const barraProgreso = mensaje.querySelector('.barra-progreso');
+                const botonCerrar = mensaje.querySelector('.cerrar-mensaje');
+                
+                // Estado para controlar el temporizador
+                let temporizador;
+                let tiempoRestante = duracion;
+                let inicioPausa;
+                
+                // Función para iniciar el temporizador
+                function iniciarTemporizador() {
+                    temporizador = setTimeout(() => {
+                        cerrarMensaje(mensaje);
+                    }, tiempoRestante);
+                }
+                
+                // Función para pausar el temporizador
+                function pausarTemporizador() {
+                    clearTimeout(temporizador);
+                    inicioPausa = Date.now();
+                    
+                    // Pausar la barra de progreso
+                    if (barraProgreso) {
+                        const anchoActual = window.getComputedStyle(barraProgreso).width;
+                        barraProgreso.style.transition = 'none';
+                        barraProgreso.style.width = anchoActual;
+                    }
+                }
+                
+                // Función para reanudar el temporizador
+                function reanudarTemporizador() {
+                    if (inicioPausa) {
+                        const tiempoTranscurrido = Date.now() - inicioPausa;
+                        tiempoRestante = Math.max(0, tiempoRestante - tiempoTranscurrido);
+                        
+                        if (tiempoRestante > 0) {
+                            if (barraProgreso) {
+                                barraProgreso.style.transition = `width ${tiempoRestante}ms linear`;
+                                barraProgreso.style.width = '0%';
+                            }
+                            
+                            iniciarTemporizador();
+                        } else {
+                            cerrarMensaje(mensaje);
+                        }
+                        
+                        inicioPausa = null;
+                    }
+                }
+                
+                // Función para cerrar mensaje
+                function cerrarMensaje(elemento) {
+                    clearTimeout(temporizador);
+                    elemento.classList.add('opacity-0', 'translate-x-2');
+                    
+                    setTimeout(() => {
+                        if (elemento.parentNode) {
+                            elemento.remove();
+                            
+                            // Si no quedan mensajes, eliminar el contenedor
+                            const contenedor = document.getElementById('mensajes-container');
+                            if (contenedor && contenedor.children.length === 0) {
+                                contenedor.style.display = 'none';
+                            }
+                        }
+                    }, 500);
+                }
+                
+                // Iniciar animación de la barra de progreso
+                if (barraProgreso) {
+                    setTimeout(() => {
+                        barraProgreso.style.width = '0%';
+                    }, 100);
+                }
+                
+                // Iniciar el temporizador
+                iniciarTemporizador();
+                
+                // Evento para cerrar manualmente
+                if (botonCerrar) {
+                    botonCerrar.addEventListener('click', () => cerrarMensaje(mensaje));
+                }
+                
+                // Eventos hover para pausar/reanudar
+                mensaje.addEventListener('mouseenter', pausarTemporizador);
+                mensaje.addEventListener('mouseleave', reanudarTemporizador);
+            });
+        });

@@ -4,9 +4,12 @@ html(lang="es")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        meta(name="csrf-token" content=csrfToken)
         title Bienes Raices - 240221 #{pagina}
         link(rel="stylesheet" href="/css/styles.css")
         
-    body.min-h-screen.bg-gray-50 
+    body.min-h-screen.bg-gray-50
+        if usuario
+            include header
         main(class="mx-auto container mt-10 px-2")
             block contenido

@@ -1,5 +1,5 @@
 import express from "express";
-import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario, paginaConfirmacion, resetearPassword,formularioActualizacionPassword,actualizarPassword } from "../controllers/usuarioController.js";
+import { formularioLogin,formularioRegistro,formulariorecuperacion,registrarUsuario, paginaConfirmacion, resetearPassword,formularioActualizacionPassword,actualizarPassword, autenticarUsuario, desbloquearCuenta, completarRegistroSocial } from "../controllers/usuarioController.js";
 
 //creamos el ruteador
 const router = express.Router();
@@ -9,9 +9,26 @@ router.get("/registro",formularioRegistro);
 router.get("/recuperacionPassword",formulariorecuperacion);
 router.get("/confirma/:token", paginaConfirmacion)
 router.get("/actualizacionPassword/:token", formularioActualizacionPassword)
+router.get("/desbloquear/:token", desbloquearCuenta);
 
+router.get("/completar-registro-social", (req, res) => {
+    // Verificar que hay datos temporales en sesión
+    if (!req.session.tempSocialUser) {
+        return res.redirect('/auth/registro');
+    }
+    
+    res.render('auth/completarRegistro', {  // ← nombre correcto del archivo
+        pagina: 'Completa tu registro',
+        usuarioTemp: req.session.tempSocialUser,
+        csrfToken: req.csrfToken ? req.csrfToken() : ''
+    });
+});
+
+// POST - Guardar contraseña y completar registro social
+router.post("/completar-registro-social", completarRegistroSocial);
 
 //POST
+router.post("/login", autenticarUsuario)
 router.post("/registro", registrarUsuario)
 router.post("/recuperacionPassword", resetearPassword)
 router.post("/actualizacionPassword/:token", actualizarPassword)
