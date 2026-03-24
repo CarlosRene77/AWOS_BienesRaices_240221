@@ -131,6 +131,19 @@ cron.schedule('0 * * * *', async () => {
 
 console.log('🕒 CRON job programado: Limpieza de cuentas expiradas cada hora');
 
+// Ruta para la nueva página principal después del login
+app.get("/main", (req, res) => {
+    // Verificar que el usuario está autenticado
+    if (!req.session.usuario) {
+        return res.redirect("/auth/login");
+    }
+    
+    res.render("main/mis-propiedades", {
+        pagina: "Página Principal",
+        usuario: req.session.usuario
+    });
+});
+
 app.listen(process.env.PORT ?? 3000, ()=> {
     console.log(`El servidor está iniciado en el puerto ${process.env.PORT ?? 3000}`)
     console.log(`🔐 Facebook: http://localhost:${process.env.PORT ?? 3000}/auth/facebook`);

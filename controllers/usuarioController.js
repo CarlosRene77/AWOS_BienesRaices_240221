@@ -1,6 +1,6 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/Usuario.js";
-import { generarToken, generarTokenConExpiracion, tokenExpirado } from "../lib/tokens.js";
+import { generarToken, generarTokenConExpiracion, tokenExpirado, generarJWT } from "../lib/tokens.js";
 import { emailRegistro, emailResetearPassword,emailBloqueoCuenta, emailDesbloqueoCuenta } from "../lib/emails.js";
 import { error } from "console";
 import { where } from "sequelize";
@@ -412,7 +412,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": "Todos los campos son obligatorios" }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -424,7 +424,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `No existe un usuario asociado a: ${email}` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -433,7 +433,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `🔒 Cuenta bloqueada por múltiples intentos fallidos. Contacta a soporte.` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -442,7 +442,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `La cuenta asociada a: ${email} no esta confirmada. Revisa tu correo.` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -461,7 +461,7 @@ const autenticarUsuario = async(req, res) => {
             return res.render("auth/login", {
                 pagina: "Error al intentar ingresar a la plataforma",
                 errores: [{ "msg": `⚠️ Cuenta bloqueada por 5 intentos fallidos.` }],
-                usuario: { correoUsuario: email }
+                usuario: null
             });
         }
         
@@ -471,7 +471,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `Contraseña incorrecta. La contraseña debe tener mínimo 8 caracteres. Te quedan ${intentosRestantes} intentos.` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
     
@@ -487,7 +487,7 @@ const autenticarUsuario = async(req, res) => {
             return res.render("auth/login", {
                 pagina: "Error al intentar ingresar a la plataforma",
                 errores: [{ "msg": `⚠️ Cuenta bloqueada por 5 intentos fallidos.` }],
-                usuario: { correoUsuario: email }
+                usuario: null
             });
         }
         
@@ -497,7 +497,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `Contraseña incorrecta. La contraseña no puede exceder 30 caracteres. Te quedan ${intentosRestantes} intentos.` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -530,8 +530,8 @@ const autenticarUsuario = async(req, res) => {
             
             return res.render("auth/login", {
                 pagina: "Error al intentar ingresar a la plataforma",
-                errores: [{ "msg": `⚠️ Cuenta bloqueada por 5 intentos fallidos.` }],
-                usuario: { correoUsuario: email }
+                errores: [{ "msg": `⚠️ Cuenta bloqueada por 5 intentos fallidos. Revisa tu correo para desbloquearla.` }],
+                usuario: null
             });
         }
         
@@ -541,7 +541,7 @@ const autenticarUsuario = async(req, res) => {
         return res.render("auth/login", {
             pagina: "Error al intentar ingresar a la plataforma",
             errores: [{ "msg": `Contraseña incorrecta. Te quedan ${intentosRestantes} intentos.` }],
-            usuario: { correoUsuario: email }
+            usuario: null
         });
     }
 
@@ -549,6 +549,12 @@ const autenticarUsuario = async(req, res) => {
     usuario.intentos_fallidos = 0;
     usuario.ultimo_login = new Date();
     await usuario.save();
+
+    // ✅ GENERAR JWT
+    const token = generarJWT(usuario.id);
+    console.log(`📧 Usuario: ${usuario.email}`);
+    console.log(`🆔 ID: ${usuario.id}`);
+    console.log(token);
 
     // Crear sesión
     req.session.usuario = {
@@ -558,8 +564,8 @@ const autenticarUsuario = async(req, res) => {
         avatar: usuario.avatar
     };
 
-    // Redirigir a Mis Propiedades
-    res.redirect('/propiedades/mis-propiedades');
+    // Redirigir a la página principal
+    res.redirect('/main');
 };
 
 // Desbloquear cuenta mediante token

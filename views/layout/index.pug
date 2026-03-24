@@ -8,6 +8,8 @@ html(lang="es")
         title Bienes Raices - 240221 #{pagina}
         link(rel="stylesheet" href="/css/styles.css")
         
-    body.min-h-screen.bg-gray-50 
+    body.min-h-screen.bg-gray-50
+        if usuario
+            include header
         main(class="mx-auto container mt-10 px-2")
             block contenido
